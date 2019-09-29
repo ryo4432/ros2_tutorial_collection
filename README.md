@@ -1,4 +1,4 @@
-# ROS2 Tutorial Packages
+# ROS2 Tutorial Collection
 
 This repository is for learning ROS2 basic functions by imitating the below repos.
 - https://github.com/ros2/examples
@@ -8,8 +8,12 @@ This repository is for learning ROS2 basic functions by imitating the below repo
 ## Environment
 - OS: Ubuntu 18.04
 - version: ROS2 Dashing Diademata
+- language: C++
 
 ## Summary
+
+Each package has one function to make it easy to understand.
+
 - publish subscribe
   - individual process communication
   - intra process communication
@@ -20,3 +24,4 @@ This repository is for learning ROS2 basic functions by imitating the below repo
 - parameter
   - set and get
 - custom message
+
