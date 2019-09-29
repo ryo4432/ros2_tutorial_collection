@@ -27,6 +27,7 @@ using SetMessage = tutorial_msgs::srv::SetMessage;
 class Talker : public rclcpp::Node
 {
   private:
+  std::string default_msg_ = "hello parameter!";
   std_msgs::msg::String msg_;
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr pub_;
   rclcpp::TimerBase::SharedPtr timer_;
@@ -37,16 +38,15 @@ class Talker : public rclcpp::Node
   explicit Talker(const std::string &topic_name)
   : Node("talker_with_service_param")
   {
-    pub_ = this->create_publisher<std_msgs::msg::String>(topic_name, 10);
-
     auto publish_message = [this]() -> void
     {
-      // decorationによる文字列の装飾
-      auto decorated_data = decoration_ + msg_.data + decoration_;
-      RCLCPP_INFO(this->get_logger(), "%s", decorated_data.c_str());
-      pub_->publish(msg_);
+      // decorate by decoration parameter
+      this->msg_.data = decoration_ + default_msg_ + decoration_;
+      RCLCPP_INFO(this->get_logger(), "%s", this->msg_.data.c_str());
+      pub_->publish(this->msg_);
     };
 
+    pub_ = this->create_publisher<std_msgs::msg::String>(topic_name, 10);
     timer_ = this->create_wall_timer(100ms, publish_message);
 
     auto handle_set_message = [this](
@@ -64,9 +64,9 @@ class Talker : public rclcpp::Node
       srv_ = this->create_service<SetMessage>("set_message", handle_set_message);
 
       decoration_ = "";
-      // decorationパラメータの宣言
+      // declare parameter: decoration
       this->declare_parameter("decoration");
-      // パラメータ設定イベントのコールバック関数
+      // callback function for parameter setting event
       auto parameter_callback = [this](const std::vector<rclcpp::Parameter> params)->
         rcl_interfaces::msg::SetParametersResult
         {
@@ -76,14 +76,14 @@ class Talker : public rclcpp::Node
           {
             if(param.get_name() == "decoration")
             {
-              // decorationパラメータの設定
+              // set decoration parameter
               decoration_ = param.as_string();
               result.successful = true;
             }
           }
           return result;
         };
-      // パラメータ設定イベントのコールバック関数設定
+      // register parameter setting event callback
       this->set_on_parameters_set_callback(parameter_callback);
   }
 };
@@ -92,7 +92,7 @@ int main(int argc, char **argv)
 {
   rclcpp::init(argc, argv);
 
-  auto node = std::make_shared<Talker>("chatter");
+  auto node = std::make_shared<Talker>("topic");
   rclcpp::spin(node);
   rclcpp::shutdown();
 

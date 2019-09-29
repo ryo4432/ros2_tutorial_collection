@@ -12,31 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
-from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
-from launch.launch_description_sources import PythonLaunchDescriptionSource
+import launch.actions
+import launch.substitutions
 import launch_ros.actions
 
 def generate_launch_description():
-  # Get the launch directory
-  package_dir = get_package_share_directory('tutorial_launch')
-  launch_dir = os.path.join(package_dir, 'launch')
+  decoration = launch.substitutions.LaunchConfiguration('decoration')
 
-  launch_description = IncludeLaunchDescription(
-    PythonLaunchDescriptionSource(
-      os.path.join(
-        launch_dir,
-        'nodes.launch.py'
-      )
+  return LaunchDescription([
+    launch.actions.DeclareLaunchArgument(
+      'decoration',
+      default_value='""',
+      description='Message decoration string'
+    ),
+    launch_ros.actions.Node(
+      package='tutorial_param',
+      node_executable='talker_with_service_param',
+      node_name='talker_with_service_param',
+      output='log',
+      parameters=[{'decoration': decoration}]
+    ),
+    launch_ros.actions.Node(
+      package='tutorial_listener',
+      node_executable='listener',
+      output='log'
     )
-  )
-
-  ld = LaunchDescription()
-
-  ld.add_action(launch_description)
-
-  return ld
+  ])
 
