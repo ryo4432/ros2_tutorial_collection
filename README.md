@@ -1,6 +1,6 @@
 # ROS2 Tutorial Collection
 
-This repository is for learning ROS2 basic functions by imitating the below repos.
+This repository is for learning ROS2 basic functions by imitating the following repos.
 - https://github.com/ros2/examples
 - https://github.com/youtalk/get-started-ros2
 - https://github.com/ros2/demos
@@ -26,7 +26,8 @@ Each package has one function to make it easy to understand.
 - custom message
   - srv
 - launch
-  - nodes running
-  - launch file running
-  - parameter setting in launch file
+  - running nodes
+  - launching launch file
+  - parameter setting from launch file
+  - parameter setting from yaml file
 
