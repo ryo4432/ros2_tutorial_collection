@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(tutorial_msgs)
+project(tutorial_action)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -17,13 +17,20 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rosidl_default_generators REQUIRED)
-find_package(std_msgs REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(tutorial_msgs REQUIRED)
+find_package(rclcpp_action REQUIRED)
 
-rosidl_generate_interfaces(${PROJECT_NAME}
-  "srv/SetMessage.srv"
-  "action/Fibonacci.action"
-  DEPENDENCIES std_msgs
+add_executable(action_server src/action_server.cpp)
+ament_target_dependencies(action_server rclcpp rclcpp_action tutorial_msgs)
+
+add_executable(action_client src/action_client.cpp)
+ament_target_dependencies(action_client rclcpp rclcpp_action tutorial_msgs)
+
+install(TARGETS
+ action_server
+ action_client
+ DESTINATION lib/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)

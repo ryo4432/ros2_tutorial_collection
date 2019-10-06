@@ -21,6 +21,8 @@ Each package has one function to make it easy to understand.
   - server and client
   - synchronous service call
   - asynchronous service call
+- action
+  - server and client
 - parameter
   - set and get
 - custom message
