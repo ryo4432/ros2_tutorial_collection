@@ -88,7 +88,7 @@ class ActionServerNode : public rclcpp::Node
   void handle_accepted(const std::shared_ptr<GoalHandleFibonacci> goal_handle)
   {
     using namespace std::placeholders;
-    // this needs to return quickly to avoid blocking the executor, so spin up a nuew thread
+    // this needs to return quickly to avoid blocking the executor, so spin up a new thread
     std::thread{
       std::bind(&ActionServerNode::execute, this, _1),
       goal_handle
@@ -107,9 +107,9 @@ class ActionServerNode : public rclcpp::Node
       this->get_node_logging_interface(), // The node logging interface of the corresponding node.
       this->get_node_waitables_interface(), // The node waitables interface of the corresponding node.
       "fibonacci", // action name
-      std::bind(&ActionServerNode::handle_goal, this, _1, _2), // GoalCallback
-      std::bind(&ActionServerNode::handle_cancel, this, _1), // CancelCallback
-      std::bind(&ActionServerNode::handle_accepted, this, _1 // AcceptedCallback
+      std::bind(&ActionServerNode::handle_goal, this, _1, _2), // GoalCallback: called when goal value is set
+      std::bind(&ActionServerNode::handle_cancel, this, _1), // CancelCallback: called when action is cancel
+      std::bind(&ActionServerNode::handle_accepted, this, _1 // AcceptedCallback: called when action is executed
       )
     );
   }

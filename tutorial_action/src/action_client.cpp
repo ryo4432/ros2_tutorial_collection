@@ -81,11 +81,11 @@ class ActionClientNode : public rclcpp::Node
   goal_done_(false)
   {
     this->client_ptr_ = rclcpp_action::create_client<Fibonacci>(
-      this->get_node_base_interface(),
-      this->get_node_graph_interface(),
-      this->get_node_logging_interface(),
-      this->get_node_waitables_interface(),
-      "fibonacci"
+      this->get_node_base_interface(), // The node base interface of the corresponding node.
+      this->get_node_graph_interface(), // The node graph interface of the corresponding node.
+      this->get_node_logging_interface(), // The node logging interface of the corresponding node.
+      this->get_node_waitables_interface(), // The node waitables interface of the corresponding node.
+      "fibonacci" // action name
     );
 
     this->timer_ = this->create_wall_timer(
@@ -120,7 +120,7 @@ class ActionClientNode : public rclcpp::Node
     }
 
     auto goal_msg = Fibonacci::Goal();
-    goal_msg.order = 10; // goal number by defined .action file
+    goal_msg.order = 10; // goal number is defined in .action file
 
     RCLCPP_INFO(this->get_logger(), "Sending goal");
 

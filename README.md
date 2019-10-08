@@ -1,6 +1,6 @@
 # ROS2 Tutorial Collection
 
-This repository is for learning ROS2 basic functions by imitating the following repos.
+This repository is for learning ROS2 basic features by imitating the following repos.
 - https://github.com/ros2/examples
 - https://github.com/youtalk/get-started-ros2
 - https://github.com/ros2/demos
@@ -12,7 +12,7 @@ This repository is for learning ROS2 basic functions by imitating the following 
 
 ## Summary
 
-Each package has one function to make it easy to understand.
+Each package has one feature.
 
 - publish subscribe
   - individual process communication
@@ -32,4 +32,6 @@ Each package has one function to make it easy to understand.
   - launching launch file
   - parameter setting from launch file
   - parameter setting from yaml file
+- lifecycle
+  - lifecycle node
 
