@@ -34,4 +34,6 @@ Each package has one feature.
   - parameter setting from yaml file
 - lifecycle
   - lifecycle node
+  - service client to handle lifecyle transition
+  - launch file to run lifecycle node
 
