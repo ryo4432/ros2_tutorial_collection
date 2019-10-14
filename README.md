@@ -27,6 +27,7 @@ Each package has one feature.
   - set and get
 - custom message
   - srv
+  - action
 - launch
   - running nodes
   - launching launch file
