@@ -24,7 +24,7 @@
 
 class ActionClientNode : public rclcpp::Node
 {
-  private:
+private:
   using Fibonacci = tutorial_msgs::action::Fibonacci;
   using GoalHandleFibonacci = rclcpp_action::ClientGoalHandle<Fibonacci>;
 
@@ -35,26 +35,28 @@ class ActionClientNode : public rclcpp::Node
   void goal_response_callback(std::shared_future<GoalHandleFibonacci::SharedPtr> future)
   {
     auto goal_handle = future.get();
-    if(!goal_handle)
-    {
+    if (!goal_handle) {
       RCLCPP_ERROR(this->get_logger(), "Goal was rejected by server");
-    }
-    else
-    {
+    } else {
       RCLCPP_INFO(this->get_logger(), "Goal accepted by server, waiting for result");
     }
   }
 
-  void feedback_callback(GoalHandleFibonacci::SharedPtr, const std::shared_ptr<const Fibonacci::Feedback> feedback)
+  void feedback_callback(
+    GoalHandleFibonacci::SharedPtr,
+    const std::shared_ptr<const Fibonacci::Feedback> feedback)
   {
-    RCLCPP_INFO(this->get_logger(), "Next number in sequence received: %" PRId64, feedback->sequence.back());
+    RCLCPP_INFO(
+      this->get_logger(),
+      "Next number in sequence received: %" PRId64,
+      feedback->sequence.back()
+    );
   }
 
-  void result_callback(const GoalHandleFibonacci::WrappedResult &result)
+  void result_callback(const GoalHandleFibonacci::WrappedResult & result)
   {
     this->goal_done_ = true;
-    switch(result.code)
-    {
+    switch (result.code) {
       case rclcpp_action::ResultCode::SUCCEEDED:
         break;
       case rclcpp_action::ResultCode::ABORTED:
@@ -64,34 +66,33 @@ class ActionClientNode : public rclcpp::Node
         RCLCPP_ERROR(this->get_logger(), "Goal was canceled");
         return;
       default:
-      RCLCPP_ERROR(this->get_logger(), "Unknown result code");
-      return;
+        RCLCPP_ERROR(this->get_logger(), "Unknown result code");
+        return;
     }
 
     RCLCPP_INFO(this->get_logger(), "Result received");
-    for (auto number : result.result->sequence)
-    {
+    for (auto number : result.result->sequence) {
       RCLCPP_INFO(this->get_logger(), "%" PRId64, number);
     }
   }
 
-  public:
-  explicit ActionClientNode(const rclcpp::NodeOptions &node_options = rclcpp::NodeOptions())
+public:
+  explicit ActionClientNode(const rclcpp::NodeOptions & node_options = rclcpp::NodeOptions())
   : Node("action_client", node_options),
-  goal_done_(false)
+    goal_done_(false)
   {
     this->client_ptr_ = rclcpp_action::create_client<Fibonacci>(
-      this->get_node_base_interface(), // The node base interface of the corresponding node.
-      this->get_node_graph_interface(), // The node graph interface of the corresponding node.
-      this->get_node_logging_interface(), // The node logging interface of the corresponding node.
-      this->get_node_waitables_interface(), // The node waitables interface of the corresponding node.
-      "fibonacci" // action name
+      this->get_node_base_interface(),  // base interface of the corresponding node.
+      this->get_node_graph_interface(),  // graph interface of the corresponding node.
+      this->get_node_logging_interface(),  // logging interface of the corresponding node.
+      this->get_node_waitables_interface(),  // waitables interface of the corresponding node.
+      "fibonacci"  // action name
     );
 
     this->timer_ = this->create_wall_timer(
       std::chrono::milliseconds(500),
       std::bind(&ActionClientNode::send_goal, this)
-      );
+    );
   }
 
   bool is_goal_done() const
@@ -107,28 +108,30 @@ class ActionClientNode : public rclcpp::Node
 
     this->goal_done_ = false;
 
-    if(!this->client_ptr_)
-    {
+    if (!this->client_ptr_) {
       RCLCPP_ERROR(this->get_logger(), "Action client not initialized");
     }
 
-    if(!this->client_ptr_->wait_for_action_server(std::chrono::seconds(10)))
-    {
+    if (!this->client_ptr_->wait_for_action_server(std::chrono::seconds(10))) {
       RCLCPP_ERROR(this->get_logger(), "Action server not available after waiting");
       this->goal_done_ = true;
       return;
     }
 
     auto goal_msg = Fibonacci::Goal();
-    goal_msg.order = 10; // goal number is defined in .action file
+    goal_msg.order = 10;  // goal number is defined in .action file
 
     RCLCPP_INFO(this->get_logger(), "Sending goal");
 
     auto send_goal_options = rclcpp_action::Client<Fibonacci>::SendGoalOptions();
-    send_goal_options.goal_response_callback = std::bind(&ActionClientNode::goal_response_callback, this, _1);
-    send_goal_options.feedback_callback = std::bind(&ActionClientNode::feedback_callback, this, _1, _2);
-    send_goal_options.result_callback = std::bind(&ActionClientNode::result_callback, this, _1);
-    auto goal_handle_future = this->client_ptr_->async_send_goal(goal_msg, send_goal_options);
+    send_goal_options.goal_response_callback =
+      std::bind(&ActionClientNode::goal_response_callback, this, _1);
+    send_goal_options.feedback_callback =
+      std::bind(&ActionClientNode::feedback_callback, this, _1, _2);
+    send_goal_options.result_callback =
+      std::bind(&ActionClientNode::result_callback, this, _1);
+    auto goal_handle_future =
+      this->client_ptr_->async_send_goal(goal_msg, send_goal_options);
   }
 };
 
@@ -137,8 +140,7 @@ int main(int argc, char ** argv)
   rclcpp::init(argc, argv);
   auto action_client = std::make_shared<ActionClientNode>();
 
-  while(!action_client->is_goal_done())
-  {
+  while (!action_client->is_goal_done()) {
     rclcpp::spin_some(action_client);
   }
 

@@ -23,15 +23,13 @@
 
 using SetMessage = tutorial_msgs::srv::SetMessage;
 
-int main(int argc, char *argv[])
+int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
   auto node = rclcpp::Node::make_shared("service_client");
   auto client = node->create_client<SetMessage>("tutorial_service");
-  while (!client->wait_for_service(std::chrono::seconds(1)))
-  {
-    if(!rclcpp::ok())
-    {
+  while (!client->wait_for_service(std::chrono::seconds(1))) {
+    if (!rclcpp::ok()) {
       RCLCPP_ERROR(node->get_logger(), "client interrupted while waiting for service to appear.");
       return 1;
     }
@@ -45,8 +43,8 @@ int main(int argc, char *argv[])
   auto result_future = client->async_send_request(request);
   // rclcpp::spin_until_future_complete gives a synchronous callback.
   // If this fucntion does not exist, the client become asynchronous callback.
-  if(rclcpp::spin_until_future_complete(node, result_future) !=
-  rclcpp::executor::FutureReturnCode::SUCCESS)
+  if (rclcpp::spin_until_future_complete(node, result_future) !=
+    rclcpp::executor::FutureReturnCode::SUCCESS)
   {
     RCLCPP_ERROR(node->get_logger(), "service call failed.");
     return 1;

@@ -18,8 +18,8 @@
 #include <cstdio>
 #include <memory>
 #include <string>
-#include <rclcpp/rclcpp.hpp>
-#include <std_msgs/msg/string.hpp>
+#include "rclcpp/rclcpp.hpp"
+#include "std_msgs/msg/string.hpp"
 
 using namespace std::chrono_literals;
 
@@ -30,8 +30,8 @@ private:
   rclcpp::TimerBase::SharedPtr timer_;
 
 public:
-  Talker(const std::string &node_name, const std::string &topic_name)
-  :Node(node_name)
+  Talker(const std::string & node_name, const std::string & topic_name)
+  : Node(node_name)
   {
     pub_ = this->create_publisher<std_msgs::msg::String>(topic_name, 10);
 
@@ -48,7 +48,7 @@ public:
   }
 };
 
-int main(int argc, char *argv[])
+int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
   rclcpp::spin(std::make_shared<Talker>("talker", "topic"));

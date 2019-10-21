@@ -34,8 +34,8 @@ private:
   rclcpp::TimerBase::SharedPtr timer_;
 
 public:
-  explicit Talker(const std::string &node_name)
-  :Node(node_name, rclcpp::NodeOptions().use_intra_process_comms(true))
+  explicit Talker(const std::string & node_name)
+  : Node(node_name, rclcpp::NodeOptions().use_intra_process_comms(true))
   {
     pub_ = this->create_publisher<std_msgs::msg::String>("topic", 10);
 
@@ -55,16 +55,17 @@ public:
 // Node that consumes messages.
 class Listener : public rclcpp::Node
 {
-  private:
+private:
   rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
-  public:
-  Listener(const std::string &node_name):
-  Node(node_name, rclcpp::NodeOptions().use_intra_process_comms(true))
+
+public:
+  explicit Listener(const std::string & node_name)
+  : Node(node_name, rclcpp::NodeOptions().use_intra_process_comms(true))
   {
     subscription_ = this->create_subscription<std_msgs::msg::String>(
       "topic",
       10,
-      [this](std_msgs::msg::String::UniquePtr msg){
+      [this](std_msgs::msg::String::UniquePtr msg) {
         RCLCPP_INFO(this->get_logger(), "I heard: '%s'", msg->data.c_str());
       });
   }

@@ -24,7 +24,7 @@
 
 class LifecycleListener : public rclcpp::Node
 {
-  private:
+private:
   std::shared_ptr<rclcpp::Subscription<std_msgs::msg::String>> sub_data_;
   std::shared_ptr<rclcpp::Subscription<lifecycle_msgs::msg::TransitionEvent>> sub_notification_;
 
@@ -43,8 +43,8 @@ class LifecycleListener : public rclcpp::Node
     );
   }
 
-  public:
-  explicit LifecycleListener(const std::string &node_name)
+public:
+  explicit LifecycleListener(const std::string & node_name)
   : Node(node_name)
   {
     sub_data_ = this->create_subscription<std_msgs::msg::String>(
@@ -61,7 +61,7 @@ class LifecycleListener : public rclcpp::Node
   }
 };
 
-int main(int argc, char **argv)
+int main(int argc, char ** argv)
 {
   setvbuf(stdout, NULL, _IONBF, BUFSIZ);
   rclcpp::init(argc, argv);

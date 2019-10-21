@@ -33,13 +33,14 @@ using namespace std::chrono_literals;
 
 class LifecycleTalker : public rclcpp_lifecycle::LifecycleNode
 {
-  private:
+private:
   std::shared_ptr<rclcpp_lifecycle::LifecyclePublisher<std_msgs::msg::String>> pub_;
   std::shared_ptr<rclcpp::TimerBase> timer_;
-  public:
-  explicit LifecycleTalker(const std::string &node_name, bool intra_process_comms = false)
+
+public:
+  explicit LifecycleTalker(const std::string & node_name, bool intra_process_comms = false)
   : rclcpp_lifecycle::LifecycleNode(node_name,
-  rclcpp::NodeOptions().use_intra_process_comms(intra_process_comms))
+      rclcpp::NodeOptions().use_intra_process_comms(intra_process_comms))
   {}
 
   // callback for walltimer in order to publish the message
@@ -49,13 +50,17 @@ class LifecycleTalker : public rclcpp_lifecycle::LifecycleNode
     auto msg = std::make_unique<std_msgs::msg::String>();
     msg->data = "Lifecycle Hello World #" + std::to_string(++count);
 
-    if (!pub_->is_activated())
-    {
-      RCLCPP_INFO(this->get_logger(), "Lifecycle publisher is currently inactive. Messages are not published.");
-    }
-    else
-    {
-      RCLCPP_INFO(this->get_logger(), "Lifecycle publisher is active. Publishing: [%s]", msg->data.c_str());
+    if (!pub_->is_activated()) {
+      RCLCPP_INFO(
+        this->get_logger(),
+        "Lifecycle publisher is currently inactive. Messages are not published."
+      );
+    } else {
+      RCLCPP_INFO(
+        this->get_logger(),
+        "Lifecycle publisher is active. Publishing: [%s]",
+        msg->data.c_str()
+      );
     }
 
     pub_->publish(std::move(msg));
@@ -104,17 +109,21 @@ class LifecycleTalker : public rclcpp_lifecycle::LifecycleNode
   }
 
   // Transition callback for state shutting down
-  CallbackReturn on_shutdown(const rclcpp_lifecycle::State &state)
+  CallbackReturn on_shutdown(const rclcpp_lifecycle::State & state)
   {
     timer_.reset();
     pub_.reset();
-    RCUTILS_LOG_INFO_NAMED(this->get_name(), "on shutdown is called from state %s.", state.label().c_str());
+    RCUTILS_LOG_INFO_NAMED(
+      this->get_name(),
+      "on shutdown is called from state %s.",
+      state.label().c_str()
+    );
 
     return CallbackReturn::SUCCESS;
   }
 };
 
-int main(int argc, char *argv[])
+int main(int argc, char * argv[])
 {
   setvbuf(stdout, NULL, _IONBF, BUFSIZ);
 

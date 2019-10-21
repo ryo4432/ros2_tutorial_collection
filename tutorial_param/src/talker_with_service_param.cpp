@@ -14,11 +14,13 @@
 # limitations under the License.
 */
 
-#include <chrono>
 #include <cstdio>
+#include <chrono>
 #include <string>
-#include <rclcpp/rclcpp.hpp>
-#include <std_msgs/msg/string.hpp>
+#include <memory>
+#include <vector>
+#include "rclcpp/rclcpp.hpp"
+#include "std_msgs/msg/string.hpp"
 #include "tutorial_msgs/srv/set_message.hpp"
 
 using namespace std::chrono_literals;
@@ -26,7 +28,7 @@ using SetMessage = tutorial_msgs::srv::SetMessage;
 
 class Talker : public rclcpp::Node
 {
-  private:
+private:
   std::string default_msg_ = "hello parameter!";
   std_msgs::msg::String msg_;
   rclcpp::Publisher<std_msgs::msg::String>::SharedPtr pub_;
@@ -34,17 +36,18 @@ class Talker : public rclcpp::Node
   rclcpp::Service<SetMessage>::SharedPtr srv_;
   std::string decoration_;
 
-  public:
-  explicit Talker(const std::string &topic_name)
+public:
+  explicit Talker(const std::string & topic_name)
   : Node("talker_with_service_param")
   {
-    auto publish_message = [this]() -> void
-    {
-      // decorate by decoration parameter
-      this->msg_.data = decoration_ + default_msg_ + decoration_;
-      RCLCPP_INFO(this->get_logger(), "%s", this->msg_.data.c_str());
-      pub_->publish(this->msg_);
-    };
+    auto publish_message =
+      [this]() -> void
+      {
+        // decorate by decoration parameter
+        this->msg_.data = decoration_ + default_msg_ + decoration_;
+        RCLCPP_INFO(this->get_logger(), "%s", this->msg_.data.c_str());
+        pub_->publish(this->msg_);
+      };
 
     pub_ = this->create_publisher<std_msgs::msg::String>(topic_name, 10);
     timer_ = this->create_wall_timer(100ms, publish_message);
@@ -55,40 +58,42 @@ class Talker : public rclcpp::Node
       std::shared_ptr<SetMessage::Response> response) -> void
       {
         (void)request_header;
-        RCLCPP_INFO(this->get_logger(), "message %s -> %s",
-        this->msg_.data.c_str(), request->message.c_str());
+        RCLCPP_INFO(
+          this->get_logger(),
+          "message %s -> %s",
+          this->msg_.data.c_str(), request->message.c_str()
+        );
         this->msg_.data = request->message;
         response->result = true;
       };
 
-      srv_ = this->create_service<SetMessage>("set_message", handle_set_message);
+    srv_ = this->create_service<SetMessage>("set_message", handle_set_message);
 
-      decoration_ = "";
-      // declare parameter: decoration
-      this->declare_parameter("decoration");
-      // callback function for parameter setting event
-      auto parameter_callback = [this](const std::vector<rclcpp::Parameter> params)->
-        rcl_interfaces::msg::SetParametersResult
-        {
-          auto result = rcl_interfaces::msg::SetParametersResult();
-          result.successful = false;
-          for(auto param : params)
-          {
-            if(param.get_name() == "decoration")
-            {
-              // set decoration parameter
-              decoration_ = param.as_string();
-              result.successful = true;
-            }
+    decoration_ = "";
+    // declare parameter: decoration
+    this->declare_parameter("decoration");
+    // callback function for parameter setting event
+    auto parameter_callback =
+      [this](const std::vector<rclcpp::Parameter> params)
+      -> rcl_interfaces::msg::SetParametersResult
+      {
+        auto result = rcl_interfaces::msg::SetParametersResult();
+        result.successful = false;
+        for (auto param : params) {
+          if (param.get_name() == "decoration") {
+            // set decoration parameter
+            decoration_ = param.as_string();
+            result.successful = true;
           }
-          return result;
-        };
-      // register parameter setting event callback
-      this->set_on_parameters_set_callback(parameter_callback);
+        }
+        return result;
+      };
+    // register parameter setting event callback
+    this->set_on_parameters_set_callback(parameter_callback);
   }
 };
 
-int main(int argc, char **argv)
+int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
 

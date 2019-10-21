@@ -21,25 +21,27 @@
 
 class ActionServerNode : public rclcpp::Node
 {
-  private:
+private:
   using Fibonacci = tutorial_msgs::action::Fibonacci;
   using GoalHandleFibonacci = rclcpp_action::ServerGoalHandle<Fibonacci>;
 
   rclcpp_action::Server<Fibonacci>::SharedPtr action_server_;
 
-  rclcpp_action::GoalResponse handle_goal(const rclcpp_action::GoalUUID &uuid, std::shared_ptr<const Fibonacci::Goal> goal)
+  rclcpp_action::GoalResponse handle_goal(
+    const rclcpp_action::GoalUUID & uuid,
+    std::shared_ptr<const Fibonacci::Goal> goal)
   {
     RCLCPP_INFO(this->get_logger(), "Received goal request with order %d", goal->order);
     (void)uuid;
     // Lets's reject sequences that are over 9000
-    if(goal->order > 9000)
-    {
+    if (goal->order > 9000) {
       return rclcpp_action::GoalResponse::REJECT;
     }
     return rclcpp_action::GoalResponse::ACCEPT_AND_EXECUTE;
   }
 
-  rclcpp_action::CancelResponse handle_cancel(const std::shared_ptr<GoalHandleFibonacci> goal_handle)
+  rclcpp_action::CancelResponse
+  handle_cancel(const std::shared_ptr<GoalHandleFibonacci> goal_handle)
   {
     RCLCPP_INFO(this->get_logger(), "Received request to cancel goal");
     (void)goal_handle;
@@ -57,11 +59,9 @@ class ActionServerNode : public rclcpp::Node
     sequence.push_back(1);
     auto result = std::make_shared<Fibonacci::Result>();
 
-    for(int i=1; (i < goal->order) && rclcpp::ok(); ++i)
-    {
+    for (int i = 1; (i < goal->order) && rclcpp::ok(); ++i) {
       // Check if there is a cancel request
-      if (goal_handle->is_canceling())
-      {
+      if (goal_handle->is_canceling()) {
         result->sequence = sequence;
         goal_handle->canceled(result);
         RCLCPP_INFO(this->get_logger(), "Goal Canceled");
@@ -77,8 +77,7 @@ class ActionServerNode : public rclcpp::Node
     }
 
     // Check if goal is done
-    if (rclcpp::ok())
-    {
+    if (rclcpp::ok()) {
       result->sequence = sequence;
       goal_handle->succeed(result);
       RCLCPP_INFO(this->get_logger(), "Goal Secceeded");
@@ -95,27 +94,34 @@ class ActionServerNode : public rclcpp::Node
     }.detach();
   }
 
-  public:
-  explicit ActionServerNode(const rclcpp::NodeOptions &options = rclcpp::NodeOptions())
+public:
+  explicit ActionServerNode(const rclcpp::NodeOptions & options = rclcpp::NodeOptions())
   : Node("action_server", options)
   {
     using namespace std::placeholders;
 
     this->action_server_ = rclcpp_action::create_server<Fibonacci>(
-      this->get_node_base_interface(), // The node base interface of the corresponding node.
-      this->get_node_clock_interface(), // The node clock interface of the corresponding node.
-      this->get_node_logging_interface(), // The node logging interface of the corresponding node.
-      this->get_node_waitables_interface(), // The node waitables interface of the corresponding node.
-      "fibonacci", // action name
-      std::bind(&ActionServerNode::handle_goal, this, _1, _2), // GoalCallback: called when goal value is set
-      std::bind(&ActionServerNode::handle_cancel, this, _1), // CancelCallback: called when action is cancel
-      std::bind(&ActionServerNode::handle_accepted, this, _1 // AcceptedCallback: called when action is executed
-      )
+      // The node base interface of the corresponding node.
+      this->get_node_base_interface(),
+      // The node clock interface of the corresponding node.
+      this->get_node_clock_interface(),
+      // The node logging interface of the corresponding node.
+      this->get_node_logging_interface(),
+      // The node waitables interface of the corresponding node.
+      this->get_node_waitables_interface(),
+      // action name
+      "fibonacci",
+      // GoalCallback: called when goal value is set
+      std::bind(&ActionServerNode::handle_goal, this, _1, _2),
+      // CancelCallback: called when action is cancel
+      std::bind(&ActionServerNode::handle_cancel, this, _1),
+      // AcceptedCallback: called when action is executed
+      std::bind(&ActionServerNode::handle_accepted, this, _1)
     );
   }
 };
 
-int main(int argc, char **argv)
+int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
 

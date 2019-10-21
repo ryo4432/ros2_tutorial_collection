@@ -28,9 +28,9 @@ add_executable(action_client src/action_client.cpp)
 ament_target_dependencies(action_client rclcpp rclcpp_action tutorial_msgs)
 
 install(TARGETS
- action_server
- action_client
- DESTINATION lib/${PROJECT_NAME}
+  action_server
+  action_client
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 if(BUILD_TESTING)

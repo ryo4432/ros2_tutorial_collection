@@ -17,26 +17,26 @@ import launch.actions
 import launch.substitutions
 import launch_ros.actions
 
+
 def generate_launch_description():
-  decoration = launch.substitutions.LaunchConfiguration('decoration')
+    decoration = launch.substitutions.LaunchConfiguration('decoration')
 
-  return LaunchDescription([
-    launch.actions.DeclareLaunchArgument(
-      'decoration',
-      default_value='""',
-      description='Message decoration string'
-    ),
-    launch_ros.actions.Node(
-      package='tutorial_param',
-      node_executable='talker_with_service_param',
-      node_name='talker_with_service_param',
-      output='log',
-      parameters=[{'decoration': decoration}]
-    ),
-    launch_ros.actions.Node(
-      package='tutorial_listener',
-      node_executable='listener',
-      output='log'
-    )
-  ])
-
+    return LaunchDescription([
+        launch.actions.DeclareLaunchArgument(
+            'decoration',
+            default_value='""',
+            description='Message decoration string'
+        ),
+        launch_ros.actions.Node(
+            package='tutorial_param',
+            node_executable='talker_with_service_param',
+            node_name='talker_with_service_param',
+            output='log',
+            parameters=[{'decoration': decoration}]
+        ),
+        launch_ros.actions.Node(
+            package='tutorial_listener',
+            node_executable='listener',
+            output='log'
+        )
+    ])

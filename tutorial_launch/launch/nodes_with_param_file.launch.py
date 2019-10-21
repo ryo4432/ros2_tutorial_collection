@@ -17,23 +17,27 @@ import launch.actions
 import launch.substitutions
 import launch_ros.actions
 
+
 def generate_launch_description():
-  params_file = launch.substitutions.LaunchConfiguration(
-    'params',
-    default=[launch.substitutions.ThisLaunchFileDir(),
-    '/params.yaml']
-  )
-  return LaunchDescription([
-    launch_ros.actions.Node(
-      package='tutorial_param',
-      node_executable='talker_with_service_param',
-      node_name='talker_with_service_param',
-      output='log',
-      parameters=[params_file]
-    ),
-    launch_ros.actions.Node(
-      package='tutorial_listener',
-      node_executable='listener',
-      output='log'
+    params_file = launch.substitutions.LaunchConfiguration(
+        'params',
+        default=[
+            launch.substitutions.ThisLaunchFileDir(),
+            '/params.yaml'
+        ]
     )
-  ])
+
+    return LaunchDescription([
+        launch_ros.actions.Node(
+            package='tutorial_param',
+            node_executable='talker_with_service_param',
+            node_name='talker_with_service_param',
+            output='log',
+            parameters=[params_file]
+        ),
+        launch_ros.actions.Node(
+            package='tutorial_listener',
+            node_executable='listener',
+            output='log'
+        )
+    ])

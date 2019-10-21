@@ -28,14 +28,15 @@ void handle_service(
   const std::shared_ptr<SetMessage::Response> response
 )
 {
-  (void)request_header; // avoid warning
+  (void)request_header;  // avoid warning
   RCLCPP_INFO(
     g_node->get_logger(),
-    "request: %s", request->message.c_str());
-    response->result = true;
+    "request: %s", request->message.c_str()
+  );
+  response->result = true;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
   g_node = rclcpp::Node::make_shared("service_server");

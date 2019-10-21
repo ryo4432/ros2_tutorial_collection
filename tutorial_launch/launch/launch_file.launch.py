@@ -18,25 +18,24 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-import launch_ros.actions
+
 
 def generate_launch_description():
-  # Get the launch directory
-  package_dir = get_package_share_directory('tutorial_launch')
-  launch_dir = os.path.join(package_dir, 'launch')
+    # Get the launch directory
+    package_dir = get_package_share_directory('tutorial_launch')
+    launch_dir = os.path.join(package_dir, 'launch')
 
-  launch_description = IncludeLaunchDescription(
-    PythonLaunchDescriptionSource(
-      os.path.join(
-        launch_dir,
-        'nodes.launch.py'
-      )
+    launch_description = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(
+                launch_dir,
+                'nodes.launch.py'
+            )
+        )
     )
-  )
 
-  ld = LaunchDescription()
+    ld = LaunchDescription()
 
-  ld.add_action(launch_description)
+    ld.add_action(launch_description)
 
-  return ld
-
+    return ld
