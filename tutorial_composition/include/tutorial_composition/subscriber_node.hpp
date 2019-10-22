@@ -14,13 +14,24 @@
 # limitations under the License.
 */
 
-#ifndef TUTORIAL_TEST__MYMATH_HPP_
-#define TUTORIAL_TEST__MYMATH_HPP_
+#ifndef TUTORIAL_COMPOSITION__SUBSCRIBER_NODE_HPP_
+#define TUTORIAL_COMPOSITION__SUBSCRIBER_NODE_HPP_
 
-namespace tutorial_test
+#include "rclcpp/rclcpp.hpp"
+#include "std_msgs/msg/string.hpp"
+#include "tutorial_composition/visibility.h"
+
+namespace tutorial_composition
 {
-int add(int a, int b);
-int sub(int a, int b);
-}  // namespace tutorial_test
+class SubscriberNode : public rclcpp::Node
+{
+private:
+  rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
 
-#endif  // TUTORIAL_TEST__MYMATH_HPP_
+public:
+  TUTORIAL_COMPOSITION_PUBLIC
+  explicit SubscriberNode(rclcpp::NodeOptions options);
+};
+}  // namespace tutorial_composition
+
+#endif  // TUTORIAL_COMPOSITION__SUBSCRIBER_NODE_HPP_
