@@ -37,4 +37,8 @@ Each package has one feature.
   - lifecycle node
   - service client to handle lifecyle transition
   - launch file to run lifecycle node
+- gtest
+  - unit test
+  - pub/sub test
+- component node
 

@@ -18,6 +18,8 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(tutorial_composition REQUIRED)
 
 include_directories(
   include
@@ -36,9 +38,14 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 
   find_package(ament_cmake_gtest REQUIRED)
+
+  # test setting: mymath
   ament_add_gtest(mymath_test test/mymath_test.cpp)
   target_link_libraries(mymath_test mymath)
 
+  # test setting: composition_test
+  ament_add_gtest(composition_test test/composition_test.cpp TIMEOUT 10)
+  ament_target_dependencies(composition_test rclcpp std_msgs tutorial_composition)
 endif()
 
 ament_package()

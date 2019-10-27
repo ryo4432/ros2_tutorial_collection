@@ -23,15 +23,36 @@ find_package(std_msgs REQUIRED)
 
 include_directories(include)
 
-# create publisher_node as shared library
-add_library(publisher_node SHARED src/publisher_node.cpp)
-target_compile_definitions(publisher_node PRIVATE "TUTORIAL_COMPOSITION_DLL")
-ament_target_dependencies(publisher_node rclcpp rclcpp_components std_msgs)
+## create tutorial_composition as shared library
+# library name definition and source link
+add_library(tutorial_composition SHARED
+  src/publisher_node.cpp
+  src/subscriber_node.cpp
+)
+# compile setting
+target_compile_definitions(tutorial_composition PRIVATE "TUTORIAL_COMPOSITION_DLL")
+target_compile_options(tutorial_composition PUBLIC -Wall)
+ament_target_dependencies(tutorial_composition rclcpp rclcpp_components std_msgs)
+# this macro allow the other package to include this package header.
+target_include_directories(tutorial_composition PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
 
-# create subscriber_node as shared library
-add_library(subscriber_node SHARED src/subscriber_node.cpp)
-target_compile_definitions(subscriber_node PRIVATE "TUTORIAL_COMPOSITION_DLL")
-ament_target_dependencies(subscriber_node rclcpp rclcpp_components std_msgs)
+if(NOT WIN32)
+  ament_environment_hooks(
+    "${ament_cmake_package_templates_ENVIRONMENT_HOOK_LIBRARY_PATH}"
+  )
+endif()
+
+# export cmake target
+ament_export_interfaces(export_tutorial_composition HAS_LIBRARY_TARGET)
+# necessary package for creating library
+ament_export_dependencies(rclcpp std_msgs)
+# export library name
+ament_export_libraries(tutorial_composition)
+# library include directory
+ament_export_include_directories(include)
 
 install(
   DIRECTORY include/
@@ -39,10 +60,12 @@ install(
 )
 
 install(
-  TARGETS publisher_node subscriber_node
-  ARCHIVE DESTINATION lib
+  TARGETS tutorial_composition
+  EXPORT export_tutorial_composition
   LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include
 )
 
 if(BUILD_TESTING)
