@@ -1,44 +1,47 @@
 # ROS2 Tutorial Collection
 
-This repository is for learning ROS2 basic features by imitating the following repos.
-- https://github.com/ros2/examples
-- https://github.com/youtalk/get-started-ros2
-- https://github.com/ros2/demos
+This repository is for learning ROS2 basic features.
 
 ## Environment
 - OS: Ubuntu 18.04
 - version: ROS2 Dashing Diademata
-- language: C++
+- language: C++(mainly)
 
 ## Summary
 
-Each package has one feature.
-
-- publish subscribe
+- [publish](./tutorial_publisher) and [subscribe](./tutorial_listener)
   - individual process communication
   - intra process communication
-- service
+- [service](./tutorial_service)
   - server and client
   - synchronous service call
   - asynchronous service call
-- action
+- [action](./tutorial_action)
   - server and client
-- parameter
+- [parameter](./tutorial_param)
   - set and get
-- custom message
+- [custom message](./tutorial_msgs)
   - srv
   - action
-- launch
+- [launch](./tutorial_launch)
   - running nodes
   - launching launch file
   - parameter setting from launch file
   - parameter setting from yaml file
-- lifecycle
+- [lifecycle](./tutorial_lifecycle)
   - lifecycle node
   - service client to handle lifecyle transition
   - launch file to run lifecycle node
-- gtest
+- [test](./tutorial_test)
   - unit test
   - pub/sub test
-- component node
+- [component node](./tutorial_composition)
 
+
+## Reference
+
+- https://github.com/ros2/examples
+- https://github.com/youtalk/get-started-ros2
+- https://github.com/ros2/demos
+- https://github.com/ros-planning/navigation2
+- https://index.ros.org/doc/ros2/Tutorials/Launch-system/
