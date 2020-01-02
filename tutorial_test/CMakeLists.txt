@@ -27,6 +27,46 @@ include_directories(
 
 add_library(mymath SHARED src/mymath.cpp)
 
+# compile setting
+target_compile_definitions(mymath PRIVATE "TUTORIAL_TEST_DLL")
+target_compile_options(mymath PUBLIC -Wall)
+ament_target_dependencies(mymath rclcpp std_msgs tutorial_composition)
+# this macro allow the other package to include this package header.
+target_include_directories(mymath PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>
+)
+
+if(NOT WIN32)
+  ament_environment_hooks(
+    "${ament_cmake_package_templates_ENVIRONMENT_HOOK_LIBRARY_PATH}"
+  )
+endif()
+
+# export cmake target
+ament_export_interfaces(export_tutorial_test HAS_LIBRARY_TARGET)
+# necessary package for creating library
+ament_export_dependencies(rclcpp std_msgs tutorial_composition)
+# export library name
+ament_export_libraries(tutorial_test)
+# library include directory
+ament_export_include_directories(include)
+
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
+
+install(
+  TARGETS mymath
+  EXPORT export_tutorial_test
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include
+)
+
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights

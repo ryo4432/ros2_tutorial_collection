@@ -17,10 +17,12 @@
 #ifndef TUTORIAL_TEST__MYMATH_HPP_
 #define TUTORIAL_TEST__MYMATH_HPP_
 
+#include "tutorial_test/visibility.h"
+
 namespace tutorial_test
 {
-int add(int a, int b);
-int sub(int a, int b);
+TUTORIAL_TEST_PUBLIC int add(int a, int b);
+TUTORIAL_TEST_PUBLIC int sub(int a, int b);
 }  // namespace tutorial_test
 
 #endif  // TUTORIAL_TEST__MYMATH_HPP_
