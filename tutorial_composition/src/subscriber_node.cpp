@@ -29,6 +29,7 @@ SubscriberNode::SubscriberNode(rclcpp::NodeOptions options)
     [this](std_msgs::msg::String::UniquePtr msg)
     {
       RCLCPP_INFO(this->get_logger(), "Subscriber; '%s'", msg->data.c_str());
+      std::flush(std::cout);
     }
   );
 }

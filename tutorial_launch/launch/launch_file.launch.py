@@ -12,30 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
-from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
+from launch.actions import LogInfo
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import ThisLaunchFileDir
 
 
 def generate_launch_description():
-    # Get the launch directory
-    package_dir = get_package_share_directory('tutorial_launch')
-    launch_dir = os.path.join(package_dir, 'launch')
-
-    launch_description = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(
-                launch_dir,
-                'nodes.launch.py'
-            )
-        )
-    )
-
-    ld = LaunchDescription()
-
-    ld.add_action(launch_description)
-
-    return ld
+    return LaunchDescription([
+        LogInfo(msg=[
+            'Including launch file located at: ', ThisLaunchFileDir(), '/nodes.launch.py'
+        ]),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([ThisLaunchFileDir(), '/nodes.launch.py'])
+        ),
+    ])

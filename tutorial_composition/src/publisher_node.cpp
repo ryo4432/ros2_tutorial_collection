@@ -30,7 +30,7 @@ PublisherNode::PublisherNode(rclcpp::NodeOptions options)
 {
   publisher_ = create_publisher<std_msgs::msg::String>("topic", 10);
   timer_ = create_wall_timer(
-    500ms, std::bind(&PublisherNode::on_timer, this)
+    1s, std::bind(&PublisherNode::on_timer, this)
   );
 }
 
@@ -39,6 +39,7 @@ void PublisherNode::on_timer()
   auto message = std_msgs::msg::String();
   message.data = "Hello, world!" + std::to_string(count_++);
   RCLCPP_INFO(this->get_logger(), "Publisher: '%s'", message.data.c_str());
+  std::flush(std::cout);
   publisher_->publish(message);
 }
 }  // namespace tutorial_composition

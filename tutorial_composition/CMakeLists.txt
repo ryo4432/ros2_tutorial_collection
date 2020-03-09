@@ -33,6 +33,10 @@ add_library(tutorial_composition SHARED
 target_compile_definitions(tutorial_composition PRIVATE "TUTORIAL_COMPOSITION_DLL")
 target_compile_options(tutorial_composition PUBLIC -Wall)
 ament_target_dependencies(tutorial_composition rclcpp rclcpp_components std_msgs)
+
+rclcpp_components_register_nodes(tutorial_composition "tutorial_composition::SubscriberNode")
+rclcpp_components_register_nodes(tutorial_composition "tutorial_composition::PublisherNode")
+
 # this macro allow the other package to include this package header.
 target_include_directories(tutorial_composition PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
