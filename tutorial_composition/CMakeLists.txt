@@ -50,7 +50,7 @@ if(NOT WIN32)
 endif()
 
 # export cmake target
-ament_export_interfaces(export_tutorial_composition HAS_LIBRARY_TARGET)
+ament_export_targets(export_tutorial_composition HAS_LIBRARY_TARGET)
 # necessary package for creating library
 ament_export_dependencies(rclcpp std_msgs)
 # export library name

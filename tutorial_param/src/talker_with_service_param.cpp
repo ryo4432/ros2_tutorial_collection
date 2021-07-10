@@ -35,6 +35,7 @@ private:
   rclcpp::TimerBase::SharedPtr timer_;
   rclcpp::Service<SetMessage>::SharedPtr srv_;
   std::string decoration_;
+  OnSetParametersCallbackHandle::SharedPtr _param_handler;
 
 public:
   explicit Talker(const std::string & topic_name)
@@ -89,7 +90,7 @@ public:
         return result;
       };
     // register parameter setting event callback
-    this->set_on_parameters_set_callback(parameter_callback);
+    _param_handler = this->add_on_set_parameters_callback(parameter_callback);
   }
 };
 

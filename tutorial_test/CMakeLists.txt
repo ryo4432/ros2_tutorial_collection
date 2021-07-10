@@ -19,6 +19,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(rclcpp_components REQUIRED)
 find_package(tutorial_composition REQUIRED)
 
 include_directories(
@@ -44,7 +45,7 @@ if(NOT WIN32)
 endif()
 
 # export cmake target
-ament_export_interfaces(export_tutorial_test HAS_LIBRARY_TARGET)
+ament_export_targets(export_tutorial_test HAS_LIBRARY_TARGET)
 # necessary package for creating library
 ament_export_dependencies(rclcpp std_msgs tutorial_composition)
 # export library name

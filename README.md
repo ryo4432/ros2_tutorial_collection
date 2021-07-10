@@ -3,8 +3,8 @@
 This repository is for learning ROS2 basic features.
 
 ## Environment
-- OS: Ubuntu 18.04, windows 10 Pro
-- version: ROS2 Dashing Diademata
+- OS: Ubuntu 20.04
+- version: ROS2 Foxy Fitzroy
 - language: C++(mainly)
 
 ## Summary
