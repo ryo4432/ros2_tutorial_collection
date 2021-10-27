@@ -11,8 +11,6 @@ public:
   {
     callback_group1_ = this->create_callback_group(
       rclcpp::callback_group::CallbackGroupType::MutuallyExclusive);
-    callback_group2_ = this->create_callback_group(
-      rclcpp::callback_group::CallbackGroupType::MutuallyExclusive);
 
 
     client_ = this->create_client<std_srvs::srv::Trigger>("sample_service");
@@ -30,14 +28,13 @@ public:
     auto future = client_->async_send_request(req);
     auto status = future.wait_for(std::chrono::seconds(3));
     if (status == std::future_status::ready) {
-      RCLCPP_INFO(get_logger(), "inner srv response is %s", future.get()->message.c_str());
+      RCLCPP_INFO(get_logger(), "srv response is %s", future.get()->message.c_str());
     } else {
-      RCLCPP_ERROR(get_logger(), "inner srv future wait failed");
+      RCLCPP_ERROR(get_logger(), "srv future wait failed");
     }
   }
 
   rclcpp::callback_group::CallbackGroup::SharedPtr callback_group1_;
-  rclcpp::callback_group::CallbackGroup::SharedPtr callback_group2_;
   rclcpp::Client<std_srvs::srv::Trigger>::SharedPtr client_;
   rclcpp::TimerBase::SharedPtr timer_;
 };
